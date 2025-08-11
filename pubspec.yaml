@@ -1,0 +1,29 @@
+name: flutter_debug_panel
+description: An in-app debug panel for development with network logs, state inspection, and performance metrics
+version: 0.0.1
+homepage: https://github.com/Dhia-Bechattaoui/flutter_debug_panel
+repository: https://github.com/Dhia-Bechattaoui/flutter_debug_panel
+issue_tracker: https://github.com/Dhia-Bechattaoui/flutter_debug_panel/issues
+documentation: https://github.com/Dhia-Bechattaoui/flutter_debug_panel#readme
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.0.0
+  provider: ^6.0.0
+  shared_preferences: ^2.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  test: ^1.0.0
+  mockito: ^5.0.0
+  build_runner: ^2.0.0
+
+flutter:
+  # No assets needed for this package
