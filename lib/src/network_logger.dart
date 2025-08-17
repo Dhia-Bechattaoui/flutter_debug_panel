@@ -6,6 +6,14 @@ class NetworkLogger {
   NetworkLogger._();
 
   static final NetworkLogger _instance = NetworkLogger._();
+
+  /// The singleton instance of [NetworkLogger].
+  ///
+  /// Use this to access the network logger functionality:
+  /// ```dart
+  /// final logger = NetworkLogger.instance;
+  /// logger.logRequest(method: 'GET', url: 'https://api.example.com', headers: {});
+  /// ```
   static NetworkLogger get instance => _instance;
 
   final List<NetworkLog> _logs = [];
@@ -50,7 +58,7 @@ class NetworkLogger {
   }
 
   /// Log a network request
-  void logRequest({
+  String logRequest({
     required String method,
     required String url,
     required Map<String, String> headers,
@@ -71,6 +79,7 @@ class NetworkLogger {
     );
 
     _addLog(log);
+    return log.id;
   }
 
   /// Log a network response
@@ -82,9 +91,12 @@ class NetworkLogger {
     String? body,
     int? duration,
     String? error,
+    String? requestId, // Optional request ID for better matching
   }) {
     final existingLogIndex = _logs.indexWhere(
-      (log) => log.method == method && log.url == url && log.statusCode == null,
+      (log) =>
+          (requestId != null && log.id == requestId) ||
+          (log.method == method && log.url == url && log.statusCode == null),
     );
 
     if (existingLogIndex != -1) {
@@ -106,7 +118,7 @@ class NetworkLogger {
         timestamp: DateTime.now(),
         duration: duration ?? 0,
         statusCode: statusCode,
-        requestHeaders: {},
+        requestHeaders: {}, // Note: request headers not available when creating response-only log
         responseHeaders: headers,
         requestBody: null,
         responseBody: body,

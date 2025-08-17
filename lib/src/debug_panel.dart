@@ -326,7 +326,7 @@ class _StateTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ExpansionTile(
       title: Text(stateKey),
-      subtitle: Text(value.runtimeType.toString()),
+      subtitle: Text(value?.runtimeType.toString() ?? 'null'),
       children: [
         Padding(
           padding: const EdgeInsets.all(16),
@@ -338,7 +338,7 @@ class _StateTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
-              value.toString(),
+              value?.toString() ?? 'null',
               style: const TextStyle(fontFamily: 'monospace'),
             ),
           ),

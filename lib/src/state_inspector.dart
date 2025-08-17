@@ -6,6 +6,14 @@ class StateInspector {
   StateInspector._();
 
   static final StateInspector _instance = StateInspector._();
+
+  /// The singleton instance of [StateInspector].
+  ///
+  /// Use this to access the state inspection functionality:
+  /// ```dart
+  /// final inspector = StateInspector.instance;
+  /// inspector.captureState('user_data', userData);
+  /// ```
   static StateInspector get instance => _instance;
 
   final Map<String, dynamic> _stateSnapshots = {};
@@ -35,9 +43,7 @@ class StateInspector {
   }
 
   /// Get the current state for a given key
-  dynamic getState(String key) {
-    return _stateSnapshots[key];
-  }
+  dynamic getState(String key) => _stateSnapshots[key];
 
   /// Check if state has changed for a given key
   bool hasStateChanged(String key, dynamic newState) {
@@ -52,11 +58,10 @@ class StateInspector {
   }
 
   /// Get state changes for a specific key
-  List<StateChange> getChangesForKey(String key) {
-    // This would need to be implemented with a proper change history
-    // For now, return empty list
-    return [];
-  }
+  List<StateChange> getChangesForKey(String key) =>
+      // This would need to be implemented with a proper change history
+      // For now, return empty list
+      [];
 
   /// Compare two values for deep equality
   bool _deepEquals(dynamic a, dynamic b) {
@@ -65,9 +70,7 @@ class StateInspector {
     if (a is Map && b is Map) {
       if (a.length != b.length) return false;
       for (final key in a.keys) {
-        if (!b.containsKey(key) || !_deepEquals(a[key], b[key])) {
-          return false;
-        }
+        if (!b.containsKey(key) || !_deepEquals(a[key], b[key])) return false;
       }
       return true;
     }
@@ -100,7 +103,8 @@ class StateInspector {
       final jsonString = jsonEncode(value);
       return jsonDecode(jsonString);
     } catch (e) {
-      return value.toString();
+      // If JSON conversion fails, return a placeholder to avoid data loss
+      return '<${value.runtimeType.toString()}: ${value.toString()}>';
     }
   }
 
@@ -133,7 +137,5 @@ class StateChange {
   final DateTime timestamp;
 
   @override
-  String toString() {
-    return 'StateChange(key: $key, timestamp: $timestamp)';
-  }
+  String toString() => 'StateChange(key: $key, timestamp: $timestamp)';
 }

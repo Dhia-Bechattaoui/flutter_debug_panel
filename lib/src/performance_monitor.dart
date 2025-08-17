@@ -6,6 +6,14 @@ class PerformanceMonitor {
   PerformanceMonitor._();
 
   static final PerformanceMonitor _instance = PerformanceMonitor._();
+
+  /// The singleton instance of [PerformanceMonitor].
+  ///
+  /// Use this to access the performance monitoring functionality:
+  /// ```dart
+  /// final monitor = PerformanceMonitor.instance;
+  /// monitor.recordMetric(name: 'api_call_duration', value: 150.0, unit: 'ms');
+  /// ```
   static PerformanceMonitor get instance => _instance;
 
   final List<PerformanceMetric> _metrics = [];
@@ -61,8 +69,7 @@ class PerformanceMonitor {
 
       recordMetric(
         name: name ?? 'execution_time',
-        value:
-            stopwatch.elapsedMicroseconds / 1000.0, // Convert to milliseconds
+        value: stopwatch.elapsedMicroseconds / 1000, // Convert to milliseconds
         unit: 'ms',
         description: 'Function execution time',
         tags: tags,
@@ -73,7 +80,7 @@ class PerformanceMonitor {
       stopwatch.stop();
       recordMetric(
         name: name ?? 'execution_time',
-        value: stopwatch.elapsedMicroseconds / 1000.0,
+        value: stopwatch.elapsedMicroseconds / 1000,
         unit: 'ms',
         description: 'Function execution time (with error)',
         tags: {...?tags, 'error': 'true'},
@@ -87,7 +94,7 @@ class PerformanceMonitor {
     // This is a placeholder - actual memory measurement would require platform-specific code
     recordMetric(
       name: 'memory_usage',
-      value: 0.0, // Placeholder value
+      value: 0, // Placeholder value
       unit: 'MB',
       description: description ?? 'Memory usage',
       tags: tags,
@@ -133,8 +140,10 @@ class PerformanceMonitor {
     final metrics = getMetricsByName(name);
     if (metrics.isEmpty) return null;
 
-    metrics.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-    return metrics.first;
+    // Create a sorted copy to avoid modifying the original list
+    final sortedMetrics = List<PerformanceMetric>.from(metrics)
+      ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    return sortedMetrics.first;
   }
 
   /// Clear all metrics
